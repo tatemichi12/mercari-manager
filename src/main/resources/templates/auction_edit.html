@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>オークション編集</title></head>
+<body>
+    <h1>オークション編集</h1>
+    <form th:action="@{/auction/edit/{id}(id=${auctionLot.id})}" th:object="${auctionLot}" method="post">
+        <label>パートナー: <input type="text" th:field="*{auctionPartner}" /></label><br/>
+        <!-- 他の項目も同様に -->
+        <button type="submit">保存</button>
+    </form>
+    <form th:action="@{/auction/delete/{id}(id=${auctionLot.id})}" method="post" onsubmit="return confirm('本当に削除しますか？');">
+        <button type="submit" style="color:red;">削除</button>
+    </form>
+    <a th:href="@{/auction/list}">一覧に戻る</a>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>楽天商品登録</title>
+    <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+    <h1>楽天商品登録</h1>
+    <form th:action="@{/rakuten-items/save}" th:object="${rakutenItem}" method="post">
+        <label>フラグ(n:新規/u:更新/d:削除):</label><br>
+        <input type="text" th:field="*{flag}" /><br>
+
+        <label>商品名:</label><br>
+        <input type="text" th:field="*{title}" /><br>
+
+        <label>モバイル商品名:</label><br>
+        <input type="text" th:field="*{titleMobile}" /><br>
+
+        <label>商品番号:</label><br>
+        <input type="text" th:field="*{itemNumber}" /><br>
+
+        <label>商品ID:</label><br>
+        <input type="text" th:field="*{itemId}" /><br>
+
+        <label>商品ページID:</label><br>
+        <input type="text" th:field="*{pageId}" /><br>
+
+        <label>実売価格:</label><br>
+        <input type="number" th:field="*{price}" /><br>
+
+        <label>表示価格:</label><br>
+        <input type="number" th:field="*{displayPrice}" /><br>
+
+        <label>消費税フラグ(1:外税,0:内税):</label><br>
+        <input type="number" th:field="*{taxFlag}" /><br>
+
+        <label>送料フラグ(1:送料別,0:送料込):</label><br>
+        <input type="number" th:field="*{shippingFlag}" /><br>
+
+        <label>個別送料:</label><br>
+        <input type="number" th:field="*{individualShipping}" /><br>
+
+        <label>買い物かごボタン(1:表示,0:非表示):</label><br>
+        <input type="number" th:field="*{orderButton}" /><br>
+
+        <label>資料請求ボタン(1:表示,0:非表示):</label><br>
+        <input type="number" th:field="*{documentRequestButton}" /><br>
+
+        <label>問い合わせボタン(1:表示,0:非表示):</label><br>
+        <input type="number" th:field="*{inquiryButton}" /><br>
+
+        <label>おすすめボタン(1:表示,0:非表示):</label><br>
+        <input type="number" th:field="*{recommendButton}" /><br>
+
+        <label>のし対応フラグ(1:対応,0:非対応):</label><br>
+        <input type="number" th:field="*{noshiFlag}" /><br>
+
+        <label>在庫数:</label><br>
+        <input type="number" th:field="*{rakutenStock}" /><br>
+
+        <label>項目選択肢:</label><br>
+        <input type="text" th:field="*{options}" /><br>
+
+        <label>販売期間(開始):</label><br>
+        <input type="text" th:field="*{limitedSaleStart}" /><br>
+        <label>販売期間(終了):</label><br>
+        <input type="text" th:field="*{limitedSaleEnd}" /><br>
+
+        <label>商品説明:</label><br>
+        <textarea th:field="*{rakutenDescription}" rows="3"></textarea><br>
+
+        <label>画像ファイル名:</label><br>
+        <input type="text" th:field="*{rakutenImageName}" /><br>
+
+        <label>ディレクトリID:</label><br>
+        <input type="text" th:field="*{directoryId}" /><br>
+
+        <label>モバイル掲載(1:掲載,0:非掲載):</label><br>
+        <input type="number" th:field="*{mobileFlag}" /><br>
+
+        <button type="submit">保存</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>オークション台帳情報</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: "Segoe UI", "Yu Gothic", "Meiryo", sans-serif;
+            background: #f6f8fa;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #346beb;
+            color: #fff;
+            padding: 22px 0 12px 32px;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 16px rgba(52,107,235,0.08);
+        }
+        h1 {
+            margin: 0 0 16px 0;
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: .02em;
+            color: #2554b0;
+            text-align: center;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 38px auto 0 auto;
+            background: #fff;
+            box-shadow: 0 4px 24px rgba(52,107,235,0.07);
+            border-radius: 8px;
+            padding: 36px 40px 40px 40px;
+        }
+        .top-actions {
+            margin-bottom: 18px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .add-btn {
+            background: #2ab37b;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 9px 26px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .2s;
+            text-decoration: none;
+            margin-bottom: 10px;
+        }
+        .add-btn:hover {
+            background: #219b67;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 10px;
+            background: #fff;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 10px 7px;
+            text-align: center;
+            font-size: 1rem;
+        }
+        th {
+            background: #f1f5fb;
+            color: #2554b0;
+            font-weight: 600;
+        }
+        tr:nth-child(even) td {
+            background: #f7faff;
+        }
+        tr:hover td {
+            background: #e9f4ff;
+            transition: background .15s;
+        }
+        .actions a, .actions form {
+            display: inline-block;
+            margin: 0 3px;
+        }
+        .actions button {
+            padding: 5px 12px;
+            font-size: .95rem;
+        }
+        /* 削除ボタン控えめな赤 */
+        form[method="post"] button[type="submit"][style*="color:red"] {
+            background: #f8bbbb;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+            margin-top: 2px;
+            margin-bottom: 2px;
+            transition: background .2s, color .2s;
+        }
+        form[method="post"] button[type="submit"][style*="color:red"]:hover {
+            background: #e57373;
+            color: #fff;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 26px;
+            color: #346beb;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: color .16s;
+        }
+        .back-link:hover {
+            color: #2554b0;
+        }
+        @media (max-width: 900px) {
+            .container {
+                padding: 14px 3vw;
+            }
+            table, th, td {
+                font-size: .97rem;
+            }
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 6px 0;
+            }
+            table, th, td {
+                font-size: .90rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>
+            オークション「<span th:text="${auctionLot.partnerName}"></span>」の台帳一覧
+        </h1>
+    </header>
+    <div class="container">
+        <div class="top-actions">
+            <a th:href="@{'/ledger/new?auctionId=' + ${auctionLot.id}}" class="add-btn">＋ 台帳新規追加</a>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>日付</th><th>区別</th><th>SKU</th><th>特徴</th><th>数量</th>
+                    <th>代価</th><th>品目</th><th>取引相手</th><th>住所</th><th>氏名</th><th>モール</th><th>詳細</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="entry : ${ledgerEntries}">
+                    <td th:text="${entry.date}"></td>
+                    <td th:text="${entry.type}"></td>
+                    <td th:text="${entry.sku}"></td>
+                    <td th:text="${entry.feature}"></td>
+                    <td th:text="${entry.quantity}"></td>
+                    <td th:text="${entry.price}"></td>
+                    <td th:text="${entry.itemName}"></td>
+                    <td th:text="${entry.auctionPartner}"></td>
+                    <td th:text="${entry.address}"></td>
+                    <td th:text="${entry.partnerName}"></td>
+                    <td th:text="${entry.mall}"></td>
+                    <td class="actions">
+                        <a th:href="@{/ledger/edit/{id}(id=${entry.id}, returnUrl='/auction/' + ${auctionLot.id} + '/ledger')}">編集</a>
+                        <form th:action="@{/ledger/delete/{id}(id=${entry.id})}" method="post" style="display:inline;" onsubmit="return confirm('本当に削除しますか？');">
+                            <button type="submit" style="color:red;">削除</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <a th:href="@{/auction/list}" class="back-link">← オークション一覧へ戻る</a>
+    </div>
+</body>
+</html>

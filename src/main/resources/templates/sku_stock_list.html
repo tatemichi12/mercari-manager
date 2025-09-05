@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>SKU在庫一覧</title>
+<style>
+    body {
+        font-family: "Segoe UI", "Yu Gothic", "Meiryo", sans-serif;
+        background: #f6f8fa;
+        margin: 0;
+        padding: 0;
+    }
+    header {
+        background: #346beb;
+        color: #fff;
+        padding: 22px 0 12px 32px;
+        margin-bottom: 18px;
+        box-shadow: 0 4px 16px rgba(52,107,235,0.08);
+    }
+    h1 {
+        margin: 32px 0 16px 0;
+        font-size: 2rem;
+        font-weight: 600;
+        letter-spacing: .02em;
+        color: #2554b0;
+        text-align: center;
+    }
+    .container {
+        max-width: 900px;
+        margin: 30px auto;
+        background: #fff;
+        box-shadow: 0 4px 24px rgba(52,107,235,0.07);
+        border-radius: 8px;
+        padding: 32px 36px 36px 36px;
+    }
+    .top-actions {
+        margin-bottom: 18px;
+        display: flex;
+        justify-content: flex-end;
+    }
+    .top-actions a button {
+        background: #346beb;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 20px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background .2s;
+        margin-left: 10px;
+    }
+    .top-actions a button:hover {
+        background: #2554b0;
+    }
+    table {
+        border-collapse: collapse;
+        margin: 24px 0;
+        width: 100%;
+        background: #fff;
+    }
+    th, td {
+        border: 1px solid #e2e8f0;
+        padding: 8px 12px;
+        font-size: 1rem;
+        text-align: center;
+    }
+    th {
+        background: #f1f5fb;
+        color: #2554b0;
+        font-weight: 600;
+    }
+    tr:nth-child(even) td {
+        background: #f7faff;
+    }
+    tr:hover td {
+        background: #e9f4ff;
+        transition: background .15s;
+    }
+    td { vertical-align: top; }
+    .edit-link {
+        background: #2ab37b;
+        color: #fff;
+        border-radius: 4px;
+        font-weight: 600;
+        padding: 4px 13px;
+        text-decoration: none;
+        transition: background .2s;
+        display: inline-block;
+    }
+    .edit-link:hover {
+        background: #219b67;
+    }
+    @media (max-width: 900px) {
+        .container { padding: 14px 3vw; }
+        table, th, td { font-size: .97rem; }
+    }
+    @media (max-width: 600px) {
+        .container { padding: 6px 0; }
+        table, th, td { font-size: .90rem; }
+    }
+</style>
+</head>
+<body>
+    <header>
+        <h1>SKU在庫一覧</h1>
+    </header>
+    <div class="container">
+        <div class="top-actions">
+            <a th:href="@{/ledger}">
+                <button>古物台帳</button>
+            </a>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>SKU</th>
+                    <th>在庫数</th>
+                    <th>商品名</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="row : ${skuStock}">
+                    <td th:text="${row[0]}"></td>
+                    <td th:text="${row[1]}"></td>
+                    <td>
+                        <span th:each="item : ${skuToItems[row[0]]}">
+                            <span th:text="${item.title}"></span><br/>
+                        </span>
+                    </td>
+                    <td>
+                        <a th:href="@{'/stock/edit/' + ${row[0]}}" class="edit-link">編集</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>商品詳細</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <style>
+        .detail-table { border: none; border-collapse: collapse; margin-top:20px;}
+        .detail-table th { text-align: left; padding: 6px 12px; background: #f1f5fa;}
+        .detail-table td { padding: 6px 12px; }
+        .main-image { max-width: 180px; max-height: 180px; border-radius: 6px; box-shadow: 0 1px 6px rgba(0,0,0,0.07);}
+    </style>
+</head>
+<body>
+    <h1>商品詳細</h1>
+
+    <table class="detail-table">
+        <tr>
+            <th>ID</th>
+            <td th:text="${item.id}"></td>
+        </tr>
+        <th>モール</th>
+        <td th:text="${item.mall != null ? item.mall.name : '未設定'}"></td>
+        </tr>
+        <tr>
+            <th>商品ID</th>
+            <td th:text="${item.productId}"></td>
+        </tr>
+        <tr>
+            <th>商品名</th>
+            <td th:text="${item.title}"></td>
+        </tr>
+        <tr>
+            <th>価格</th>
+            <td th:text="${item.price} + ' 円'"></td>
+        </tr>
+        <tr>
+            <th>仕入れ価格</th>
+            <td th:text="${item.cost} + ' 円'"></td>
+        </tr>
+        <tr>
+            <th>SKU</th>
+            <td th:text="${item.sku}"></td>
+        </tr>
+        <tr>
+            <th>在庫数</th>
+            <td th:text="${item.stock}"></td>
+        </tr>
+        <tr>
+            <th>JANコード</th>
+            <td th:text="${item.janCode}"></td>
+        </tr>
+        <tr>
+            <th>ブランドID</th>
+            <td th:text="${item.brandId}"></td>
+        </tr>
+        <tr>
+            <th>カテゴリID</th>
+            <td th:text="${item.categoryId}"></td>
+        </tr>
+        <tr>
+            <th>商品の状態</th>
+            <td th:text="${item.condition}"></td>
+        </tr>
+        <tr>
+            <th>商品説明</th>
+            <td><pre th:text="${item.description}"></pre></td>
+        </tr>
+        <tr>
+            <th>画像1</th>
+            <td>
+                <img th:if="${item.image1 != null && item.image1 != ''}"
+                     th:src="${item.image1}" alt="商品画像1" class="main-image"/>
+            </td>
+        </tr>
+        <tr>
+            <th>画像2～5</th>
+            <td>
+                <img th:if="${item.image2 != null && item.image2 != ''}" th:src="${item.image2}" alt="画像2" class="main-image"/>
+                <img th:if="${item.image3 != null && item.image3 != ''}" th:src="${item.image3}" alt="画像3" class="main-image"/>
+                <img th:if="${item.image4 != null && item.image4 != ''}" th:src="${item.image4}" alt="画像4" class="main-image"/>
+                <img th:if="${item.image5 != null && item.image5 != ''}" th:src="${item.image5}" alt="画像5" class="main-image"/>
+            </td>
+        </tr>
+        <tr>
+            <th>シリアル画像</th>
+            <td>
+                <img th:if="${item.imageSerial != null && item.imageSerial != ''}" th:src="${item.imageSerial}" alt="シリアル画像" class="main-image"/>
+            </td>
+        </tr>
+        <tr>
+            <th>SKUタイプ</th>
+            <td th:text="${item.skuType}"></td>
+        </tr>
+        <tr>
+            <th>SKUコード</th>
+            <td th:text="${item.skuCode}"></td>
+        </tr>
+        <tr>
+            <th>スナップショットID</th>
+            <td th:text="${item.snapshotId}"></td>
+        </tr>
+        <tr>
+            <th>配送方法</th>
+            <td th:text="${item.shippingMethod}"></td>
+        </tr>
+        <tr>
+            <th>発送地域</th>
+            <td th:text="${item.regionCode}"></td>
+        </tr>
+        <tr>
+            <th>発送までの日数</th>
+            <td>
+                <span th:switch="${item.shippingDays}">
+                    <span th:case="1">1〜2日で発送</span>
+                    <span th:case="2">2〜3日で発送</span>
+                    <span th:case="3">4〜7日で発送</span>
+                    <span th:case="4">90日以内で発送</span>
+                    <span th:case="5">8〜14日で発送</span>
+                    <span th:case="*"></span>
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <th>ステータス</th>
+            <td>
+                <span th:if="${item.status == 2}" style="color:#4CAF50;font-weight:bold;">公開</span>
+                <span th:if="${item.status == 1}" style="color:#FF9800;font-weight:bold;">非公開</span>
+            </td>
+        </tr>
+        <tr>
+            <th>送料負担</th>
+            <td>
+                <span th:if="${item.shippingCharge == 1}">出品者負担</span>
+                <span th:if="${item.shippingCharge == 2}">購入者負担</span>
+            </td>
+        </tr>
+        <tr>
+            <th>送料ID</th>
+            <td th:text="${item.shippingFeeId}"></td>
+        </tr>
+        <tr>
+            <th>登録日時</th>
+            <td th:text="${#temporals.format(item.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+        </tr>
+        <tr>
+            <th>更新日時</th>
+            <td th:text="${#temporals.format(item.updatedAt, 'yyyy-MM-dd HH:mm')}"></td>
+        </tr>
+    </table>
+
+    <p style="margin-top:18px;">
+        <a th:href="@{/items/edit/{id}(id=${item.id})}"><button>編集</button></a>
+        <a th:href="@{/items}"><button>一覧に戻る</button></a>
+    </p>
+</body>
+</html>

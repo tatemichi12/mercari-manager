@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>商品編集</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <style>
+        .detail-table { border: none; border-collapse: collapse; }
+        .detail-table th { text-align: left; padding: 5px 10px; }
+        .detail-table td { padding: 5px 10px; }
+    </style>
+</head>
+<body>
+    <h1 th:text="${item.id} != null ? '商品編集' : '新規登録'"></h1>
+
+    <form th:action="@{/items/save}" th:object="${item}" method="post">
+        <input type="hidden" th:field="*{id}" />
+
+        <table class="detail-table">
+            <tr><th>ID:</th><td th:text="${item.id}"></td></tr>
+            <tr><th>商品ID:</th><td><input type="text" th:field="*{productId}" /></td></tr>
+            <tr><th>商品名:</th><td><input type="text" th:field="*{title}" /></td></tr>
+            <tr><th>価格:</th><td><input type="number" th:field="*{price}" /> 円</td></tr>
+            <tr><th>仕入れ価格:</th><td><input type="number" th:field="*{cost}" /> 円</td></tr>
+            <tr><th>SKU:</th><td><input type="text" th:field="*{sku}" /></td></tr>
+            <tr><th>説明:</th><td><textarea th:field="*{description}"></textarea></td></tr>
+            <tr>
+                <th>画像URL:</th>
+                <td>
+                    <input type="text" th:field="*{image1}" placeholder="メイン画像URL" /><br/>
+                    <input type="text" th:field="*{imageSerial}" placeholder="シリアル画像URL" />
+                </td>
+            </tr>
+            <tr><th>SKUタイプ:</th><td><input type="text" th:field="*{skuType}" /></td></tr>
+            <tr><th>在庫数:</th><td><input type="number" th:field="*{stock}" /></td></tr>
+            <tr><th>SKUコード:</th><td><input type="text" th:field="*{skuCode}" /></td></tr>
+            <tr><th>JANコード:</th><td><input type="text" th:field="*{janCode}" /></td></tr>
+            <tr><th>カテゴリID:</th><td><input type="text" th:field="*{categoryId}" /></td></tr>
+            <tr><th>ブランドID:</th><td><input type="text" th:field="*{brandId}" /></td></tr>
+            <tr><th>商品の状態:</th><td><input type="text" th:field="*{condition}" /></td></tr>
+            <tr><th>配送方法:</th><td><input type="text" th:field="*{shippingMethod}" /></td></tr>
+            <tr><th>地域コード:</th><td><input type="text" th:field="*{regionCode}" /></td></tr>
+            <tr><th>発送までの日数:</th><td><input type="number" th:field="*{shippingDays}" /></td></tr>
+            <tr><th>送料負担:</th><td><input type="text" th:field="*{shippingCharge}" /></td></tr>
+            <tr><th>送料ID:</th><td><input type="text" th:field="*{shippingFeeId}" /></td></tr>
+            <tr>
+                <th>商品ステータス:</th>
+                <td>
+                    <select th:field="*{status}">
+                        <option value="1">非公開</option>
+                        <option value="2">公開</option>
+                    </select>
+                </td>
+            </tr>
+            <tr><th>登録日時:</th><td th:text="${#temporals.format(item.createdAt, 'yyyy-MM-dd HH:mm')}"></td></tr>
+            <tr><th>更新日時:</th><td th:text="${#temporals.format(item.updatedAt, 'yyyy-MM-dd HH:mm')}"></td></tr>
+        </table>
+
+        <p>
+            <button type="submit">保存</button>
+            <a th:href="@{/items}">一覧に戻る</a>
+        </p>
+    </form>
+</body>
+</html>

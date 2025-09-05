@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>楽天商品一覧</title>
+    <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+    <h1>楽天商品一覧</h1>
+    <a th:href="@{/rakuten-items/new}"><button>新規登録</button></a>
+    <a th:href="@{/rakuten-items/upload}"><button>CSVインポート</button></a>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>フラグ</th>
+            <th>商品名</th>
+            <th>モバイル名</th>
+            <th>商品番号</th>
+            <th>商品ID</th>
+            <th>ページID</th>
+            <th>実売価格</th>
+            <th>表示価格</th>
+            <th>消費税</th>
+            <th>送料</th>
+            <th>個別送料</th>
+            <th>在庫</th>
+            <th>ディレクトリID</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${rakutenItems}">
+            <td th:text="${item.id}"></td>
+            <td th:text="${item.flag}"></td>
+            <td th:text="${item.title}"></td>
+            <td th:text="${item.titleMobile}"></td>
+            <td th:text="${item.itemNumber}"></td>
+            <td th:text="${item.itemId}"></td>
+            <td th:text="${item.pageId}"></td>
+            <td th:text="${item.price}"></td>
+            <td th:text="${item.displayPrice}"></td>
+            <td th:text="${item.taxFlag}"></td>
+            <td th:text="${item.shippingFlag}"></td>
+            <td th:text="${item.individualShipping}"></td>
+            <td th:text="${item.rakutenStock}"></td>
+            <td th:text="${item.directoryId}"></td>
+            <td>
+                <a th:href="@{'/rakuten-items/' + ${item.id}}">詳細</a> /
+                <a th:href="@{'/rakuten-items/edit/' + ${item.id}}">編集</a> /
+                <a th:href="@{'/rakuten-items/delete/' + ${item.id}}"
+                   onclick="return confirm('本当に削除しますか？');">削除</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>出品管理 - 商品一覧</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <style>
+        body {
+            font-family: "Segoe UI", "Yu Gothic", "Meiryo", sans-serif;
+            background: #f6f8fa;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #346beb;
+            color: #fff;
+            padding: 22px 0 12px 32px;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 16px rgba(52,107,235,0.08);
+        }
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: .02em;
+        }
+        nav {
+            margin-top: 10px;
+        }
+        nav a button {
+            background: #2554b0;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 7px 18px;
+            font-size: 1em;
+            font-weight: 600;
+            margin-right: 10px;
+            cursor: pointer;
+            transition: background .17s;
+        }
+        nav a button:hover {
+            background: #2ab37b;
+            color: #fff;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background: #fff;
+            box-shadow: 0 4px 24px rgba(52,107,235,0.07);
+            border-radius: 7px;
+            overflow: hidden;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 10px 7px;
+            text-align: center;
+            font-size: 1rem;
+        }
+        th {
+            background: #f1f5fb;
+            color: #2554b0;
+            font-weight: 600;
+        }
+        tr:nth-child(even) td {
+            background: #f7faff;
+        }
+        tr:hover td {
+            background: #e9f4ff;
+            transition: background .15s;
+        }
+        td.title-cell {
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .status-label {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #fff;
+        }
+        .status-public { background: #4CAF50; }
+        .status-private { background: #FF9800; }
+        td.description-cell {
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+        }
+        td.description-cell.expanded {
+            white-space: normal;
+            overflow: visible;
+            text-overflow: initial;
+            background-color: #ffffe0;
+        }
+        .danger {
+            background: #f8bbbb !important;
+            color: #c62828 !important;
+            border: 1px solid #ef9a9a !important;
+        }
+        .danger:hover {
+            background: #e57373 !important;
+            color: #fff !important;
+        }
+        .batch-actions,
+        .batch-section {
+            margin: 12px 0 16px 0;
+            padding: 10px 0 0 0;
+            border-top: 1px solid #e0e6ed;
+        }
+        .batch-section label {
+            font-weight: 600;
+        }
+        .batch-section textarea {
+            width: 300px;
+            height: 100px;
+            font-size: 1rem;
+        }
+        .batch-section input[type="number"] {
+            width: 80px;
+            font-size: 1rem;
+        }
+        @media (max-width: 900px) {
+            table, th, td {
+                font-size: .97rem;
+            }
+            header, .batch-section, .batch-actions {
+                padding-left: 2vw;
+                padding-right: 2vw;
+            }
+        }
+        @media (max-width: 600px) {
+            table, th, td {
+                font-size: .90rem;
+            }
+            .batch-section textarea {
+                width: 98vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>商品管理システム</h1>
+        <nav>
+            <a th:href="@{/items/new}"><button>新しい商品登録</button></a>
+            <a th:href="@{/items/upload}"><button>CSVインポート</button></a>
+            <a th:href="@{/items/stock}"><button>在庫リスト</button></a>
+            <a th:href="@{/auction/list}"><button>仕入れ</button></a>
+        </nav>
+    </header>
+
+    <form method="get" th:action="@{/items}">
+        <select name="status">
+            <option value="">全部</option>
+            <option value="2" th:selected="${status == 2}">公開のみ</option>
+            <option value="1" th:selected="${status == 1}">非表示のみ</option>
+        </select>
+        <input type="text" name="keyword" placeholder="キーワード" th:value="${keyword}" />
+        <button type="submit">検索</button>
+    </form>
+
+    <form method="post" th:action="@{/items/batch-action}">
+        <table>
+            <thead>
+            <tr>
+                <th><input type="checkbox" id="select-all"> 全選択</th>
+                <th>商品名</th>
+                <th>価格</th>
+                <th>出品状況</th>
+                <th>SKU</th>
+                <th>在庫</th>
+                <th>日数</th>
+                <th>商品説明</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item, iterStat : ${items}">
+                <td>
+                    <input type="checkbox" name="selectedIds" th:value="${item.id}" />
+                    <input type="hidden" th:name="'items[' + ${iterStat.index} + '].id'" th:value="${item.id}" />
+                </td>
+                <!-- 商品名 -->
+                <td class="title-cell">
+                    <div class="display" th:text="${item.title}" style="cursor:pointer;"></div>
+                    <input class="edit" type="text" th:name="'items[' + ${iterStat.index} + '].title'" th:value="${item.title}" style="display:none; width:180px;" />
+                </td>
+                <!-- 価格 -->
+                <td>
+                    <div class="display" th:text="${item.price}" style="cursor:pointer;"></div>
+                    <input class="edit" type="number" th:name="'items[' + ${iterStat.index} + '].price'" th:value="${item.price}" style="display:none; width:80px;" /> 円
+                </td>
+                <!-- ステータス -->
+                <td>
+                    <div class="display status-label"
+                         th:text="${item.status == 2 ? '公開' : '非公開'}"
+                         th:classappend="${item.status == 2} ? ' status-public' : ' status-private'"
+                         style="cursor:pointer;">
+                    </div>
+                    <select class="edit" th:name="'items[' + ${iterStat.index} + '].status'" style="display:none;">
+                        <option value="2" th:selected="${item.status == 2}">公開</option>
+                        <option value="1" th:selected="${item.status == 1}">非公開</option>
+                    </select>
+                </td>
+                <!-- SKU -->
+                <td>
+                    <div class="display" th:text="${item.sku}" style="cursor:pointer;"></div>
+                    <input class="edit" type="text" th:name="'items[' + ${iterStat.index} + '].sku'" th:value="${item.sku}" style="display:none; width:120px;" />
+                </td>
+                <!-- 在庫 -->
+                <td>
+                    <div class="display" th:text="${item.stock}" style="cursor:pointer;"></div>
+                    <input class="edit" type="number" th:name="'items[' + ${iterStat.index} + '].stock'" th:value="${item.stock}" style="display:none; width:60px;" />
+                </td>
+                <!-- 発送日数 -->
+                <td>
+                    <div class="display" th:text="
+                        ${item.shippingDays == 1 ? '1〜2日で発送' : 
+                        (item.shippingDays == 2 ? '2〜3日で発送' : 
+                        (item.shippingDays == 3 ? '4〜7日で発送' : 
+                        (item.shippingDays == 4 ? '90日以内で発送' : 
+                        (item.shippingDays == 5 ? '8〜14日で発送' : ''))))}" style="cursor:pointer;"></div>
+                    <select class="edit" th:name="'items[' + ${iterStat.index} + '].shippingDays'" style="display:none;">
+                        <option value="1" th:selected="${item.shippingDays == 1}">1〜2日で発送</option>
+                        <option value="2" th:selected="${item.shippingDays == 2}">2〜3日で発送</option>
+                        <option value="3" th:selected="${item.shippingDays == 3}">4〜7日で発送</option>
+                        <option value="4" th:selected="${item.shippingDays == 4}">90日以内で発送</option>
+                        <option value="5" th:selected="${item.shippingDays == 5}">8〜14日で発送</option>
+                    </select>
+                </td>
+                <!-- 商品説明 -->
+                <td class="description-cell">
+                    <div class="display" th:text="${item.description}" style="cursor:pointer;"></div>
+                    <textarea class="edit" th:name="'items[' + ${iterStat.index} + '].description'" style="display:none; width: 100%; height: 80px;" th:text="${item.description}"></textarea>
+                </td>
+                <!-- 操作 -->
+                <td>
+                    <a th:href="@{'/items/' + ${item.id}}">詳細</a> /
+                    <a th:href="@{'/items/edit/' + ${item.id}}">編集</a> /
+                    <a th:href="@{'/items/delete/' + ${item.id}}" onclick="return confirm('本当に削除しますか？');">削除</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="batch-actions">
+            <button type="submit" name="action" value="delete" class="danger" onclick="return confirm('選択した商品を削除します。よろしいですか？');">選択削除</button>
+            <button type="submit" name="action" value="status_update">ステータス一括変更</button>
+            <button type="submit" name="action" value="csv">選択CSV出力</button>
+            <select name="shippingDaysValue">
+                <option value="">発送日数を選択</option>
+                <option value="1">1〜2日で発送</option>
+                <option value="2">2〜3日で発送</option>
+                <option value="3">4〜7日で発送</option>
+                <option value="4">90日以内で発送</option>
+                <option value="5">8〜14日で発送</option>
+            </select>
+            <button type="submit" name="action" value="shippingDays_update">
+                日数一括変更
+            </button>
+            <button type="submit" name="action" value="batch_save">一括保存</button>
+        </div>
+        <div class="batch-section">
+            <label>説明文末尾に追加する文章:</label><br>
+            <textarea name="appendText" placeholder="追加する文章を入力"></textarea>
+            <br>
+            <button type="submit" name="action" value="append_description">
+                説明文末尾に一括追加
+            </button>
+        </div>
+        <div class="batch-section">
+            <label>一括値下げ額（円）:</label>
+            <input type="number" name="discountAmount" value="100" min="100" step="100">
+            <button type="submit" name="action" value="batch_discount">一括値下げ</button>
+        </div>
+    </form>
+
+    <form th:action="@{/items/upload-serial-images}" method="post" enctype="multipart/form-data">
+        <label>シリアル画像アップロード（SKU名とファイル名一致）:</label>
+        <input type="file" name="files" multiple required>
+        <button type="submit">アップロード</button>
+    </form>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const selectAll = document.getElementById("select-all");
+            const checkboxes = document.querySelectorAll("input[name='selectedIds']");
+            selectAll.addEventListener("change", function () {
+                checkboxes.forEach(cb => cb.checked = this.checked);
+            });
+        });
+    </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll("tr").forEach(row => {
+            row.querySelectorAll(".display").forEach(displayElem => {
+                const parent = displayElem.parentElement;
+                const editElem = parent.querySelector(".edit");
+
+                if (!editElem) return;
+
+                displayElem.style.cursor = "pointer";
+
+                displayElem.addEventListener("click", () => {
+                    displayElem.style.display = "none";
+                    editElem.style.display = "";
+                    editElem.focus();
+
+                    // テキスト入力ならカーソル末尾へ
+                    if (editElem.setSelectionRange && editElem.type !== "select-one") {
+                        const len = editElem.value.length;
+                        editElem.setSelectionRange(len, len);
+                    }
+                });
+
+                // フォーカスアウトで編集終了
+                editElem.addEventListener("blur", () => {
+                    if (editElem.tagName.toLowerCase() === "select") {
+                        const selectedOption = editElem.options[editElem.selectedIndex];
+                        displayElem.textContent = selectedOption.text;
+                    } else {
+                        displayElem.textContent = editElem.value;
+                    }
+                    editElem.style.display = "none";
+                    displayElem.style.display = "";
+                });
+
+                // Enterでinputやtextareaの場合も編集終了（選択肢は除く）
+                if (editElem.tagName.toLowerCase() !== "select") {
+                    editElem.addEventListener("keydown", (e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                            e.preventDefault();
+                            editElem.blur();
+                        }
+                    });
+                }
+            });
+        });
+
+        // 既存の全選択処理
+        const selectAll = document.getElementById("select-all");
+        const checkboxes = document.querySelectorAll("input[name='selectedIds']");
+        if (selectAll) {
+            selectAll.addEventListener("change", function () {
+                checkboxes.forEach(cb => cb.checked = this.checked);
+            });
+        }
+    });
+    </script>
+</body>
+</html>

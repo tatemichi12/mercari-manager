@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>古物台帳編集</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: "Segoe UI", "Yu Gothic", "Meiryo", sans-serif;
+            background: #f6f8fa;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #346beb;
+            color: #fff;
+            padding: 20px 0 12px 32px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 16px rgba(52,107,235,0.08);
+        }
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: .02em;
+        }
+        .container {
+            max-width: 540px;
+            margin: 40px auto;
+            background: #fff;
+            box-shadow: 0 4px 24px rgba(52,107,235,0.07);
+            border-radius: 10px;
+            padding: 38px 44px 36px 44px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        label {
+            font-size: 1rem;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 2px;
+        }
+        input[type="text"], 
+        input[type="date"], 
+        input[type="number"], 
+        select {
+            border: 1px solid #d3dbe4;
+            border-radius: 5px;
+            padding: 8px 10px;
+            font-size: 1rem;
+            margin-top: 4px;
+            background: #f9fafe;
+            transition: border-color .2s;
+        }
+        input[type="text"]:focus, 
+        input[type="date"]:focus, 
+        input[type="number"]:focus, 
+        select:focus {
+            border-color: #346beb;
+            outline: none;
+            background: #fff;
+        }
+        button[type="submit"] {
+            background: #346beb;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 18px;
+            cursor: pointer;
+            transition: background .2s;
+        }
+        button[type="submit"]:hover {
+            background: #2554b0;
+        }
+        /* 削除ボタン控えめな赤に */
+        form[method="post"] button[type="submit"][style*="color:red"] {
+            background: #f8bbbb;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            transition: background .2s, color .2s;
+        }
+        form[method="post"] button[type="submit"][style*="color:red"]:hover {
+            background: #e57373;
+            color: #fff;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            color: #346beb;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: color .16s;
+        }
+        a:hover {
+            color: #2554b0;
+        }
+        @media (max-width: 700px) {
+            .container {
+                padding: 16px 5vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>古物台帳 編集</h1>
+    </header>
+    <div class="container">
+        <form th:action="@{/ledger/edit/{id}(id=${ledgerEntry.id})}" th:object="${ledgerEntry}" method="post">
+            <!-- ...フォーム内容はそのまま... -->
+            <label>日付:
+                <input type="date" th:field="*{date}" />
+            </label>
+            <label>SKU:
+                <input type="text" th:field="*{sku}" />
+            </label>
+            <label>区別:
+                <input type="text" th:field="*{type}" />
+            </label>
+            <label>特徴:
+                <input type="text" th:field="*{feature}" />
+            </label>
+            <label>数量:
+                <input type="number" th:field="*{quantity}" />
+            </label>
+            <label>代価:
+                <input type="number" th:field="*{price}" />
+            </label>
+            <label>品目:
+                <input type="text" th:field="*{itemName}" />
+            </label>
+            <label>取引相手:
+                <input type="text" th:field="*{ledgerPartner}" />
+            </label>
+            <label>住所:
+                <input type="text" th:field="*{address}" />
+            </label>
+            <label>氏名:
+                <input type="text" th:field="*{partnerName}" />
+            </label>
+            <label>モール:
+                <input type="text" th:field="*{mall}" />
+            </label>
+            <label>オークション:
+                <select th:field="*{auctionLot.id}">
+                    <option th:each="lot : ${auctionLots}" 
+                            th:value="${lot.id}" 
+                            th:text="${lot.id + ' ' + lot.date + ' ' + lot.auctionPartner}"
+                            th:selected="${selectedAuctionId != null} ? ${lot.id} == ${selectedAuctionId} : false">
+                    </option>
+                </select>
+            </label>
+            <button type="submit">保存</button>
+        </form>
+        <form th:action="@{/ledger/delete/{id}(id=${ledgerEntry.id})}" method="post" onsubmit="return confirm('本当に削除しますか？');">
+            <button type="submit" style="color:red;">削除</button>
+        </form>
+        <a th:href="${returnUrl}">← 前の画面に戻る</a>
+    </div>
+</body>
+</html>

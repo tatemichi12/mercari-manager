@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>オークション新規追加</title>
+</head>
+<body>
+    <h1>オークション新規追加</h1>
+    <form th:action="@{/auction/new}" th:object="${auctionLot}" method="post">
+        <label>落札日: <input type="date" th:field="*{date}" required /></label><br/>
+        <label>取引先: <input type="text" th:field="*{auctionPartner}" required /></label><br/>
+        <label>住所: <input type="text" th:field="*{address}" /></label><br/>
+        <label>氏名: <input type="text" th:field="*{partnerName}" /></label><br/>
+        <label>モール: <input type="text" th:field="*{mall}" /></label><br/>
+        <label>合計金額: <input type="number" th:field="*{totalPrice}" required /></label><br/>
+        <button type="submit">登録</button>
+    </form>
+    <a th:href="@{/auction/list}">一覧へ戻る</a>
+</body>
+</html>

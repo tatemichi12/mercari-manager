@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>楽天商品詳細</title>
+    <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+    <h1>楽天商品詳細</h1>
+    <table>
+        <tr><th>ID</th><td th:text="${rakutenItem.id}"></td></tr>
+        <tr><th>フラグ</th><td th:text="${rakutenItem.flag}"></td></tr>
+        <tr><th>商品名</th><td th:text="${rakutenItem.title}"></td></tr>
+        <tr><th>モバイル名</th><td th:text="${rakutenItem.titleMobile}"></td></tr>
+        <tr><th>商品番号</th><td th:text="${rakutenItem.itemNumber}"></td></tr>
+        <tr><th>商品ID</th><td th:text="${rakutenItem.itemId}"></td></tr>
+        <tr><th>ページID</th><td th:text="${rakutenItem.pageId}"></td></tr>
+        <tr><th>実売価格</th><td th:text="${rakutenItem.price}"></td></tr>
+        <tr><th>表示価格</th><td th:text="${rakutenItem.displayPrice}"></td></tr>
+        <tr><th>消費税</th><td th:text="${rakutenItem.taxFlag}"></td></tr>
+        <tr><th>送料</th><td th:text="${rakutenItem.shippingFlag}"></td></tr>
+        <tr><th>個別送料</th><td th:text="${rakutenItem.individualShipping}"></td></tr>
+        <tr><th>買い物かごボタン</th><td th:text="${rakutenItem.orderButton}"></td></tr>
+        <tr><th>資料請求ボタン</th><td th:text="${rakutenItem.documentRequestButton}"></td></tr>
+        <tr><th>問い合わせボタン</th><td th:text="${rakutenItem.inquiryButton}"></td></tr>
+        <tr><th>おすすめボタン</th><td th:text="${rakutenItem.recommendButton}"></td></tr>
+        <tr><th>のし対応フラグ</th><td th:text="${rakutenItem.noshiFlag}"></td></tr>
+        <tr><th>在庫数</th><td th:text="${rakutenItem.rakutenStock}"></td></tr>
+        <tr><th>項目選択肢</th><td th:text="${rakutenItem.options}"></td></tr>
+        <tr><th>販売期間(開始)</th><td th:text="${rakutenItem.limitedSaleStart}"></td></tr>
+        <tr><th>販売期間(終了)</th><td th:text="${rakutenItem.limitedSaleEnd}"></td></tr>
+        <tr><th>商品説明</th><td th:text="${rakutenItem.rakutenDescription}"></td></tr>
+        <tr><th>画像ファイル名</th><td th:text="${rakutenItem.rakutenImageName}"></td></tr>
+        <tr><th>ディレクトリID</th><td th:text="${rakutenItem.directoryId}"></td></tr>
+        <tr><th>モバイル掲載</th><td th:text="${rakutenItem.mobileFlag}"></td></tr>
+        <tr><th>登録日時</th><td th:text="${#temporals.format(rakutenItem.createdAt, 'yyyy-MM-dd HH:mm')}"></td></tr>
+        <tr><th>更新日時</th><td th:text="${#temporals.format(rakutenItem.updatedAt, 'yyyy-MM-dd HH:mm')}"></td></tr>
+    </table>
+    <p>
+        <a th:href="@{/rakuten-items}">一覧に戻る</a> |
+        <a th:href="@{'/rakuten-items/edit/' + ${rakutenItem.id}}">編集</a> |
+        <a th:href="@{'/rakuten-items/delete/' + ${rakutenItem.id}}"
+           onclick="return confirm('本当に削除しますか？');">削除</a>
+    </p>
+</body>
+</html>

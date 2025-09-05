@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>オークション詳細</title>
+</head>
+<body>
+    <h1>オークション詳細</h1>
+    <div>
+        <p>落札日: <span th:text="${auctionLot.date}"></span></p>
+        <p>出品者: <span th:text="${auctionLot.auctionPartner}"></span></p>
+        <p>住所: <span th:text="${auctionLot.address}"></span></p>
+        <p>氏名: <span th:text="${auctionLot.partnerName}"></span></p>
+        <p>モール: <span th:text="${auctionLot.mall}"></span></p>
+        <p>合計金額: <span th:text="${auctionLot.totalPrice}"></span> 円</p>
+    </div>
+    <h2>商品一覧</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>SKU</th>
+                <th>品目</th>
+                <th>特徴</th>
+                <th>数量</th>
+                <th>個別価格</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="entry : ${auctionLot.entries}">
+                <td th:text="${entry.sku}"></td>
+                <td th:text="${entry.itemName}"></td>
+                <td th:text="${entry.feature}"></td>
+                <td th:text="${entry.quantity}"></td>
+                <td th:text="${entry.price}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/ledger}"><button>台帳一覧へ</button></a>
+</body>
+</html>

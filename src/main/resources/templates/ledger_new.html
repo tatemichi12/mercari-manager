@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>台帳新規登録</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: "Segoe UI", "Yu Gothic", "Meiryo", sans-serif;
+            background: #f6f8fa;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            color: #346beb;
+            text-align: center;
+            margin-top: 36px;
+            font-size: 2.1rem;
+            font-weight: 600;
+            letter-spacing: .02em;
+        }
+        .form-wrapper {
+            background: #fff;
+            max-width: 560px;
+            margin: 34px auto 0 auto;
+            padding: 36px 38px 32px 38px;
+            border-radius: 10px;
+            box-shadow: 0 4px 24px rgba(52,107,235,0.08);
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+            letter-spacing: .01em;
+            display: flex;
+            flex-direction: column;
+        }
+        input[type="text"], input[type="date"], input[type="number"], select {
+            width: 100%;
+            padding: 8px 9px;
+            border: 1px solid #d3dbe4;
+            border-radius: 5px;
+            font-size: 1rem;
+            margin-top: 3px;
+            background: #f9fafe;
+            transition: border-color .2s;
+        }
+        input:focus, select:focus {
+            border-color: #346beb;
+            outline: none;
+            background: #fff;
+        }
+        button[type="submit"], .custom-btn {
+            background: #346beb;
+            color: #fff;
+            border: none;
+            padding: 11px 0;
+            border-radius: 5px;
+            font-size: 1.08rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background .2s;
+        }
+        button[type="submit"]:hover, .custom-btn:hover {
+            background: #2554b0;
+        }
+        button[type="button"] {
+            background: #c1c9d6;
+            color: #222;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+        button[type="button"]:hover {
+            background: #a7b2c3;
+        }
+        .auction-section {
+            margin-top: 24px;
+            padding: 15px 0 0 0;
+            border-top: 1px solid #e0e6ed;
+        }
+        .auction-section h2 {
+            color: #2554b0;
+            font-size: 1.08em;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+        }
+        @media (max-width: 700px) {
+            .form-wrapper { padding: 12px 4vw; }
+        }
+    </style>
+</head>
+<body>
+    <h1>台帳新規登録</h1>
+    <div class="form-wrapper">
+    <form th:action="@{/ledger/new}" th:object="${ledgerEntry}" method="post">
+        <label>日付:
+            <input type="date" th:field="*{date}" required />
+        </label>
+        <label>オークション取引相手:
+            <input type="text" th:field="*{auctionPartner}" />
+        </label>
+        <label>区別:
+            <input type="text" th:field="*{type}" required />
+        </label>
+        <label>SKU:
+            <input type="text" th:field="*{sku}" required />
+        </label>
+        <label>特徴:
+            <input type="text" th:field="*{feature}" />
+        </label>
+        <label>数量:
+            <input type="number" th:field="*{quantity}" required />
+        </label>
+        <label>代価:
+            <input type="number" th:field="*{price}" required />
+        </label>
+        <label>品目:
+            <input type="text" th:field="*{itemName}" required />
+        </label>
+        <label>取引相手:
+            <input type="text" th:field="*{ledgerPartner}" />
+        </label>
+        <label>住所:
+            <input type="text" th:field="*{address}" />
+        </label>
+        <label>氏名:
+            <input type="text" th:field="*{partnerName}" />
+        </label>
+        <label>モール:
+            <input type="text" th:field="*{mall}" />
+        </label>
+        <div class="auction-section">
+            <h2>既存オークションを選択</h2>
+            <label>オークション:
+                <select th:field="*{auctionLot}">
+                    <option value="">-- 選択しない --</option>
+                    <option th:each="lot : ${auctionLots}" th:value="${lot.id}" th:text="${lot.auctionPartner + ' / ' + lot.date}"></option>
+                </select>
+            </label>
+        </div>
+        <div>
+            <button type="submit">登録</button>
+            <a th:href="@{/ledger}"><button type="button" class="custom-btn">一覧へ戻る</button></a>
+        </div>
+    </form>
+    </div>
+</body>
+</html>

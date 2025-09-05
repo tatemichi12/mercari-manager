@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>モール一覧</title>
+</head>
+<body>
+    <h2>モール一覧</h2>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>モール名</th>
+            <th>モールコード</th>
+            <th>操作</th>
+        </tr>
+        <tr th:each="mall : ${mallList}">
+            <td th:text="${mall.id}"></td>
+            <td th:text="${mall.name}"></td>
+            <td th:text="${mall.code}"></td>
+            <td>
+                <form th:action="@{'/malls/delete/' + ${mall.id}}" method="post" th:object="${mall}" style="display:inline;">
+                    <button type="submit" onclick="return confirm('本当に削除しますか？');">削除</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+    <a th:href="@{/malls/new}">新規登録</a>
+</body>
+</html>

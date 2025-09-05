@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>古物台帳一覧</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: "Segoe UI", "Yu Gothic", "Meiryo", sans-serif;
+            background: #f6f8fa;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #346beb;
+            color: #fff;
+            padding: 24px 0 10px 32px;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 16px rgba(52,107,235,0.08);
+        }
+        h1 {
+            margin: 0 0 16px 0;
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: .02em;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 32px auto;
+            background: #fff;
+            box-shadow: 0 4px 24px rgba(52,107,235,0.07);
+            border-radius: 8px;
+            padding: 32px 40px 40px 40px;
+        }
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: flex-end;
+            margin-bottom: 24px;
+        }
+        form label {
+            font-size: 1rem;
+            color: #444;
+        }
+        form input[type="text"],
+        form input[type="date"] {
+            border: 1px solid #d3dbe4;
+            border-radius: 5px;
+            padding: 7px 10px;
+            margin-left: 5px;
+            font-size: 1rem;
+            background: #f9fafe;
+            transition: border-color .2s;
+        }
+        form input[type="text"]:focus,
+        form input[type="date"]:focus {
+            border-color: #346beb;
+            outline: none;
+            background: #fff;
+        }
+        form button {
+            background: #346beb;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 18px;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-left: 5px;
+            cursor: pointer;
+            transition: background .2s;
+        }
+        form button[type="button"] {
+            background: #c1c9d6;
+            color: #222;
+        }
+        form button[type="button"]:hover,
+        form button[type="submit"]:hover {
+            background: #2554b0;
+            color: #fff;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 12px;
+            background: #fff;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 10px 7px;
+            text-align: center;
+            font-size: 1rem;
+        }
+        th {
+            background: #f1f5fb;
+            color: #2554b0;
+            font-weight: 600;
+        }
+        tr:nth-child(even) td {
+            background: #f7faff;
+        }
+        tr:hover td {
+            background: #e9f4ff;
+            transition: background .15s;
+        }
+        .actions a, .actions form {
+            display: inline-block;
+            margin: 0 3px;
+        }
+        .actions button {
+            padding: 5px 12px;
+            font-size: .95rem;
+        }
+        .add-btn {
+            margin-top: 28px;
+            display: block;
+            background: #2ab37b;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .2s;
+            text-decoration: none;
+        }
+        .add-btn:hover {
+            background: #219b67;
+        }
+        @media (max-width: 900px) {
+            .container {
+                padding: 14px 3vw;
+            }
+            table, th, td {
+                font-size: .97rem;
+            }
+            form {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 6px 0;
+            }
+            table, th, td {
+                font-size: .90rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>古物台帳一覧</h1>
+    </header>
+    <div class="container">
+        <form method="get" th:action="@{/ledger}">
+            <label>期間: <input type="date" name="fromDate" /> ～ <input type="date" name="toDate" /></label>
+            <label>品目: <input type="text" name="itemName" /></label>
+            <label>SKU: <input type="text" name="sku" /></label>
+            <label>取引相手: <input type="text" name="ledgerPartner" /></label>
+            <label>モール: <input type="text" name="mall" /></label>
+            <button type="submit">検索</button>
+            <a th:href="@{/ledger}"><button type="button">リセット</button></a>
+            <a th:href="@{/ledger/pdf}" target="_blank"><button type="button">PDF印刷</button></a>
+        </form>
+        <table>
+            <thead>
+                <tr>
+                    <th>日付</th><th>区別</th><th>SKU</th><th>特徴</th><th>数量</th>
+                    <th>代価</th><th>品目</th><th>取引相手</th><th>住所</th><th>氏名</th><th>モール</th>
+                    <th>オークション詳細</th><th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="ledger : ${ledgerEntries}">
+                    <td th:text="${ledger.date}"></td>
+                    <td th:text="${ledger.type}"></td>
+                    <td th:text="${ledger.sku}"></td>
+                    <td th:text="${ledger.feature}"></td>
+                    <td th:text="${ledger.quantity}"></td>
+                    <td th:text="${ledger.price}"></td>
+                    <td th:text="${ledger.itemName}"></td>
+                    <td th:text="${ledger.ledgerPartner}"></td>
+                    <td th:text="${ledger.address}"></td>
+                    <td th:text="${ledger.partnerName}"></td>
+                    <td th:text="${ledger.mall}"></td>
+                    <td th:text="${ledger.auctionLot != null ? ledger.auctionLot.date + ' ' + ledger.auctionLot.auctionPartner : '-'}"></td>
+                    <td class="actions">
+                        <a th:href="@{/ledger/edit/{id}(id=${ledger.id}, returnUrl='/ledger')}">編集</a>
+                        <form th:action="@{/ledger/delete/{id}(id=${ledger.id})}" method="post" style="display:inline;" onsubmit="return confirm('本当に削除しますか？');">
+                            <button type="submit" style="color:red;">削除</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <a th:href="@{/ledger/new}" class="add-btn">＋ 台帳新規登録</a>
+    </div>
+</body>
+</html>

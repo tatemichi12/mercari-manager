@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>モール新規登録</title>
+</head>
+<body>
+    <h2>モール新規登録</h2>
+    <form th:action="@{/malls/new}" th:object="${mall}" method="post">
+        <label>モール名:</label>
+        <input type="text" th:field="*{name}" /><br>
+        <label>モールコード:</label>
+        <input type="text" th:field="*{code}" /><br>
+        <button type="submit">登録</button>
+    </form>
+</body>
+</html>

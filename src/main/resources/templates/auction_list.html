@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>オークション一覧</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: "Segoe UI", "Yu Gothic", "Meiryo", sans-serif;
+            background: #f6f8fa;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #346beb;
+            color: #fff;
+            padding: 24px 0 10px 32px;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 16px rgba(52,107,235,0.08);
+        }
+        h1 {
+            margin: 0 0 16px 0;
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: .02em;
+        }
+        .container {
+            max-width: 950px;
+            margin: 36px auto;
+            background: #fff;
+            box-shadow: 0 4px 24px rgba(52,107,235,0.07);
+            border-radius: 8px;
+            padding: 32px 40px 40px 40px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 12px;
+            background: #fff;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 10px 7px;
+            text-align: center;
+            font-size: 1rem;
+        }
+        th {
+            background: #f1f5fb;
+            color: #2554b0;
+            font-weight: 600;
+        }
+        tr:nth-child(even) td {
+            background: #f7faff;
+        }
+        tr:hover td {
+            background: #e9f4ff;
+            transition: background .15s;
+        }
+        .actions a, .actions form {
+            display: inline-block;
+            margin: 0 3px;
+        }
+        .actions button {
+            padding: 5px 12px;
+            font-size: .95rem;
+        }
+        .add-btn {
+            margin-top: 28px;
+            display: inline-block;
+            background: #2ab37b;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .2s;
+            text-decoration: none;
+        }
+        .add-btn:hover {
+            background: #219b67;
+        }
+        /* 削除ボタン控えめな赤 */
+        form[method="post"] button[type="submit"][style*="color:red"] {
+            background: #f8bbbb;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+            margin-top: 2px;
+            margin-bottom: 2px;
+            transition: background .2s, color .2s;
+        }
+        form[method="post"] button[type="submit"][style*="color:red"]:hover {
+            background: #e57373;
+            color: #fff;
+        }
+        @media (max-width: 900px) {
+            .container {
+                padding: 14px 3vw;
+            }
+            table, th, td {
+                font-size: .97rem;
+            }
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 6px 0;
+            }
+            table, th, td {
+                font-size: .90rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>オークション一覧</h1>
+    </header>
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>落札日</th>
+                    <th>取引先</th>
+                    <th>住所</th>
+                    <th>氏名</th>
+                    <th>モール</th>
+                    <th>合計金額</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="auctionLot : ${auctionLots}">
+                    <td th:text="${auctionLot.id}"></td>
+                    <td th:text="${auctionLot.date}"></td>
+                    <td th:text="${auctionLot.auctionPartner}"></td>
+                    <td th:text="${auctionLot.address}"></td>
+                    <td th:text="${auctionLot.partnerName}"></td>
+                    <td th:text="${auctionLot.mall}"></td>
+                    <td th:text="${auctionLot.totalPrice}"></td>
+                    <td class="actions">
+                        <a th:href="@{'/auction/' + ${auctionLot.id} + '/ledger'}">台帳を見る</a>
+                        <a th:href="@{/auction/edit/{id}(id=${auctionLot.id})}">編集</a>
+                        <form th:action="@{/auction/delete/{id}(id=${auctionLot.id})}" method="post" style="display:inline;" onsubmit="return confirm('本当に削除しますか？');">
+                            <button type="submit" style="color:red;">削除</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <a th:href="@{/auction/new}" class="add-btn">＋ 新規追加</a>
+    </div>
+</body>
+</html>
