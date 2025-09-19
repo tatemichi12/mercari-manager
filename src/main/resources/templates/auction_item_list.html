@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>入札会商品一覧</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <style>
+        body {
+            font-family: "Segoe UI", "Yu Gothic", "Meiryo", sans-serif;
+            background: #f6f8fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .search-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .search-form input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+        }
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .table th, .table td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+            font-size: 13px;
+        }
+        .table th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+        .alert {
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>入札会商品一覧</h1>
+            <div>
+                <a href="/api/auction-item/template" class="btn btn-secondary">Excelテンプレートダウンロード</a>
+                <a href="/api/auction-item/web/upload" class="btn btn-primary">Excelアップロード</a>
+            </div>
+        </div>
+
+        <!-- 成功・エラーメッセージ -->
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+        <!-- 検索フォーム -->
+        <form class="search-form" method="get" th:action="@{/api/auction-item/web/list}">
+            <input type="text" name="keyword" th:value="${keyword}" placeholder="キーワードで検索（入札会ID、商品名、メーカーなど）" style="width: 300px;">
+            <button type="submit" class="btn btn-primary">検索</button>
+            <a href="/api/auction-item/web/list" class="btn btn-secondary">クリア</a>
+        </form>
+
+        <!-- 商品一覧テーブル -->
+        <div style="overflow-x: auto;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>入札会ID</th>
+                        <th>グループNo.</th>
+                        <th>商品No.</th>
+                        <th>入札額</th>
+                        <th>グループ名</th>
+                        <th>商品名</th>
+                        <th>メーカー</th>
+                        <th>型式</th>
+                        <th>CPU</th>
+                        <th>メモリ</th>
+                        <th>HDD</th>
+                        <th>タイプ</th>
+                        <th>備考</th>
+                        <th>登録日時</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${items}">
+                        <td th:text="${item.auctionId}"></td>
+                        <td th:text="${item.groupNo}"></td>
+                        <td th:text="${item.productNo}"></td>
+                        <td th:text="${item.bidAmount != null ? #numbers.formatInteger(item.bidAmount, 0, 'COMMA') + '円' : ''}"></td>
+                        <td th:text="${item.groupName}"></td>
+                        <td th:text="${item.productName}"></td>
+                        <td th:text="${item.manufacturer}"></td>
+                        <td th:text="${item.model}"></td>
+                        <td th:text="${item.cpu}"></td>
+                        <td th:text="${item.memory}"></td>
+                        <td th:text="${item.hdd}"></td>
+                        <td th:text="${item.type}"></td>
+                        <td th:text="${item.remarks}"></td>
+                        <td th:text="${#temporals.format(item.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(items)}">
+                        <td colspan="14" style="text-align: center; color: #666;">
+                            データがありません
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="margin-top: 20px; color: #666; font-size: 14px;">
+            総件数: <span th:text="${#lists.size(items)}"></span>件
+        </div>
+    </div>
+</body>
+</html>
