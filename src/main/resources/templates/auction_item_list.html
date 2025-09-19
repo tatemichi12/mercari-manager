@@ -136,7 +136,7 @@
                         <td th:text="${item.auctionId}"></td>
                         <td th:text="${item.groupNo}"></td>
                         <td th:text="${item.productNo}"></td>
-                        <td th:text="${item.bidAmount != null ? #numbers.formatInteger(item.bidAmount, 0, 'COMMA') + '円' : ''}"></td>
+                        <td th:text="${item.bidAmount != null ? #numbers.formatDecimal(item.bidAmount, 0, 'COMMA', 0, 'POINT') + '円' : ''}"></td>
                         <td th:text="${item.groupName}"></td>
                         <td th:text="${item.productName}"></td>
                         <td th:text="${item.manufacturer}"></td>
